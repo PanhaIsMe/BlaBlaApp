@@ -9,7 +9,7 @@ class RidesService {
   //  filter the rides starting from given departure location
   //
   static List<Ride> _filterByDeparture(List<Ride> rides, Location departure) {
-    return [];
+    return rides.where((ride) => ride.departureLocation == departure).toList();
   }
 
   //
@@ -19,13 +19,27 @@ class RidesService {
     List<Ride> rides,
     int requestedSeat,
   ) {
-    return [];
+    return rides.where((ride) => ride.availableSeats == requestedSeat).toList();
   }
 
   //
   //  filter the rides   with several optional criteria (flexible filter options)
   //
   static List<Ride> filterBy({Location? departure, int? seatRequested}) {
-    return [];
+    return fakeRides.where((ride) {
+      if (departure != null && seatRequested != ride.availableSeats) {
+        return false;
+      } else if (seatRequested != null && departure != ride.departureLocation) {
+        return false;
+      } else {
+        return true;
+      }
+    }).toList();
   }
+}
+
+void main(List<String> args) {
+  Location newlocation = Location(name: "Birmingham", country: Country.uk);
+  RidesService._filterBySeatRequested(fakeRides, 10).toList();
+  RidesService.filterBy();
 }
